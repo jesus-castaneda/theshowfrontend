@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mlbtheshow-frontend:
+    build: .
+    container_name: mlbtheshow-frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external: true
