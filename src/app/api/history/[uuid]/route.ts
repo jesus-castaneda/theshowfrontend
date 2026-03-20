@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { openDb } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 type ParamsType = { uuid: string; };
 
 export async function GET(req: Request, context: { params: ParamsType } | any) {
