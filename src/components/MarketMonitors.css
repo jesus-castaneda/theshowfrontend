@@ -1,0 +1,143 @@
+.monitors-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+
+.monitors-header {
+  padding: 2rem;
+  border-radius: var(--radius);
+  text-align: center;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.2), rgba(17, 24, 39, 0.6));
+}
+
+.monitors-header h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #60a5fa;
+  margin-bottom: 0.5rem;
+}
+
+.monitors-header .sub-text {
+  font-size: 0.875rem;
+  color: #93c5fd;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.monitors-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: var(--muted-foreground);
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  font-size: 1.125rem;
+}
+
+.monitor-card {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.m-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.m-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.delete-btn {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.m-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.m-stats .stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.m-stats .label {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.m-stats .value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+}
+
+.alert-val { color: #facc15; }
+
+.view-chart-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+}
+
+.view-chart-btn:hover {
+  border-color: var(--primary);
+  background: rgba(39, 39, 42, 0.8);
+}
+
+.view-chart-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.chart-container {
+  height: 300px;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
+.chart-loader {
+  text-align: center;
+  color: var(--muted-foreground);
+  margin-top: 4rem;
+}
