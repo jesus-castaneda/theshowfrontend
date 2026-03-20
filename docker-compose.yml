@@ -17,7 +17,7 @@ services:
   mlb-show-worker:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.worker
     container_name: mlbtheshow-worker
     restart: unless-stopped
     command: node worker.mjs

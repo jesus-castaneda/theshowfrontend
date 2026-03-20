@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install standard alpine build tools if needed for sqlite binaries
+RUN apk add --no-cache libc6-compat
+
+# Copy package definitions
+COPY package.json package-lock.json ./
+
+# Install production dependencies natively
+RUN npm ci --omit=dev
+
+# Copy the standalone background worker
+COPY worker.mjs ./
+
+# Start the infinite loop process
+CMD ["node", "worker.mjs"]
