@@ -5,11 +5,10 @@ WORKDIR /app
 # Install standard alpine build tools if needed for sqlite binaries
 RUN apk add --no-cache libc6-compat
 
-# Copy package definitions
-COPY package.json package-lock.json ./
-
-# Install production dependencies natively
-RUN npm ci --omit=dev
+# Intentionally DO NOT copy package.json!
+# If we run npm ci, it installs the Next.js compiler, React, and Recharts, bloating the image to 1.19GB.
+# We exclusively need sqlite to run the background loop.
+RUN npm install sqlite sqlite3
 
 # Copy the standalone background worker
 COPY worker.mjs ./

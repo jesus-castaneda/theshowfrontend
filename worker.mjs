@@ -34,6 +34,8 @@ async function runWorker() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       player_uuid TEXT NOT NULL,
       player_name TEXT NOT NULL,
+      target_buy_price INTEGER DEFAULT 0,
+      outbid_alert_sent INTEGER DEFAULT 0,
       interval_minutes INTEGER DEFAULT 5,
       profit_threshold INTEGER DEFAULT 0,
       drop_threshold_pct INTEGER DEFAULT 0,
@@ -41,6 +43,15 @@ async function runWorker() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(player_uuid)
     );
+
+    -- Apply migrations for existing dbs
+    ALTER TABLE monitors ADD COLUMN target_buy_price INTEGER DEFAULT 0;
+    ALTER TABLE monitors ADD COLUMN outbid_alert_sent INTEGER DEFAULT 0;
+  `).catch(e => {
+    // Ignore duplicate column errors from migrations
+  });
+
+  await db.exec(`
 
     CREATE TABLE IF NOT EXISTS price_history (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,6 +113,22 @@ async function runWorker() {
                      console.log(`\n📉 ANOMALY ALERT: ${m.player_name} dropped by ${dropPct.toFixed(1)}%!`);
                      await sendDiscordAlert(`📉 **MARKET CRASH ALERT** 📉\n**${m.player_name}**\nCurrent Buy: ${best_buy_price.toLocaleString()}\n48HR Average: ${Math.floor(hist.avg_buy).toLocaleString()}\nDrop: **${dropPct.toFixed(1)}%**!`);
                   }
+                }
+              }
+
+              // Buy Order Tracker Logic
+              if (m.target_buy_price > 0) {
+                if (best_buy_price > m.target_buy_price) {
+                  if (!m.outbid_alert_sent) {
+                    console.log(`\n⚠️ OUTBID ALERT: ${m.player_name} top order is now ${best_buy_price.toLocaleString()}!`);
+                    await sendDiscordAlert(`⚠️ **OUTBID ALERT** ⚠️\n**${m.player_name}**\nYou have been outbid!\nCurrent Best Buy: **${best_buy_price.toLocaleString()}** stubs\nYour Order: ${m.target_buy_price.toLocaleString()} stubs`);
+                    await db.run('UPDATE monitors SET outbid_alert_sent = 1 WHERE player_uuid = ?', [m.player_uuid]);
+                    m.outbid_alert_sent = 1;
+                  }
+                } else if (best_buy_price <= m.target_buy_price && m.outbid_alert_sent) {
+                  // User replaced their order to be at the top again, or the price dropped below
+                  await db.run('UPDATE monitors SET outbid_alert_sent = 0 WHERE player_uuid = ?', [m.player_uuid]);
+                  m.outbid_alert_sent = 0;
                 }
               }
 
